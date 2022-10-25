@@ -36,6 +36,7 @@ function Chat() {
 
         socket.on('send-message',data => {
             console.log(data);
+            if(data.senderId===user._id) return;
             setMessages(prevState => [...prevState,data]);
         })
 
@@ -98,6 +99,13 @@ function Chat() {
                     content:message,
                     newChat:selectedChat.newChat
                 }
+                const msg = {
+                    senderId:user._id,
+                    content:message,
+                    createdAt:new Date().toISOString(),
+                    _id:Math.random().toString(36).substr(2,9)
+                }
+                setMessages(prevState => [...prevState,msg]);
                 const res = await axios.post('api/user/postMessage',data);
 
                 if(res.status===200) {
