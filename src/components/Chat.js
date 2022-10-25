@@ -144,7 +144,6 @@ function Chat() {
               <div className="chat__box_wrapper">
                 <div className="chat__body__bg">
                 {loading?<Spinner/>:messages.map(msg => {
-                    console.log(msg);
                     return <div ref={scrollRef}>
                     <Message 
                     key={msg._id} 
