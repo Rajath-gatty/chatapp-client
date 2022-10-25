@@ -19,13 +19,13 @@ function Login() {
         console.log(email, password);
         try {
             setLoading(true);
-            const result = await axios.post("http://localhost:8080/api/auth/login",{email,password});
+            const result = await axios.post("api/auth/login",{email,password});
             setLoading(false);
             setAuthenticated(result.data.user,result.data.token);
             localStorage.setItem("user",JSON.stringify(result.data));
             history.push("/");
         } catch (error) {
-            if(error.response.status===401){
+            if(error.response?.status===401){
             setError(error.response.data.errors);
             }
             setLoading(false);
