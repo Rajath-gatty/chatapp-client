@@ -5,7 +5,8 @@ import "./index.css";
 import App from "./App";
 import axios from "axios";
 
-axios.defaults.baseURL = "http://localhost:8080";
+axios.defaults.baseURL = "https://chatapp-backend.cyclic.app/";
+// axios.defaults.baseURL = "http://localhost:8080";
 
 ReactDOM.render(
     <React.StrictMode>
