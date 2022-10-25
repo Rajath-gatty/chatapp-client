@@ -1,0 +1,31 @@
+:root {
+    --primary-color: #00bfa5;
+    --grey-color: #ededed;
+    --chat-bg: #e5ddd5;
+    --sent-chat-color:#D9FDD3;
+    --dark-sent-chat-color:#005C4B;
+    --dark-grey-color:#202C33;
+    --dark-conv-color:#111B21;
+}
+
+body {
+    scrollbar-width: thin;
+    scrollbar-color: #333;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.form__error {
+    color: rgb(212, 36, 36) !important;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+}
+
+.MuiSvgIcon-root {
+    color: #919191;
+}
