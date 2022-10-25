@@ -6,7 +6,8 @@ import {
     Search,
 } from "@material-ui/icons";
 import styled from "styled-components";
-import { IconButton,MenuItem,Menu } from "@material-ui/core";
+import { IconButton,MenuItem,Menu} from "@material-ui/core";
+import Spinner from "../components/Spinner";
 import {useGlobalContext} from "../Context/Context";
 import Room from "./Room";
 import axios from "axios";
@@ -14,6 +15,7 @@ import axios from "axios";
 function Sidebar() {
     const [anchorEl, setAnchorEl] = useState(null);
     const [conversation,setConversation] = useState([]);
+    const [loading,setLoading] = useState(true);
 
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -28,11 +30,13 @@ function Sidebar() {
     useEffect(() => {
         const getConversation = async () => {
             try {
+                setLoading(true);
                 const res = await axios.post("api/user/conversation");
-                console.log(res);
+                setLoading(false);
                 setConversation(res.data);
             } catch (error) {
                 console.log(error);
+                setLoading(false);
             }
         };
         getConversation();
@@ -53,26 +57,26 @@ function Sidebar() {
                     <IconButton
                     onClick={openNewChatSidebar}
                     >
-                        <ChatIcon />
+                    <ChatIcon />
                     </IconButton>
                     <IconButton 
-                    size="small"
-                    aria-describedby="menu"
-                    aria-controls={open ? 'menu' : undefined}
-                    aria-haspopup="true"
-                    aria-expanded={open ? 'true' : undefined}
-                    onClick={handleClick}
+                        size="small"
+                        aria-describedby="menu"
+                        aria-controls={open ? 'menu' : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={open ? 'true' : undefined}
+                        onClick={handleClick}
                     >
-                        <MoreVert />
+                    <MoreVert />
                     </IconButton>
                         <Menu
-                        id="menu"
-                        open={open}
-                        anchorEl={anchorEl}
-                        onClose={handleClose}
-                        onClick={handleClose}
-                        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                        anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+                            id="menu"
+                            open={open}
+                            anchorEl={anchorEl}
+                            onClose={handleClose}
+                            onClick={handleClose}
+                            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                            anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
                         >
                             <MenuItem ><span onClick={openNewChatSidebar}>New Chat</span></MenuItem>
                             <MenuItem ><span onClick={openNewGroupSidebar}>New Group</span></MenuItem>
@@ -94,7 +98,7 @@ function Sidebar() {
             </div>
             {/* Chat Room Section */}
             <div className="room__container">
-                {conversation.map(chat => (
+                {loading?<Spinner/>:conversation.map(chat => (
                     <Room 
                     key={chat._id} 
                     darkMode={darkMode}

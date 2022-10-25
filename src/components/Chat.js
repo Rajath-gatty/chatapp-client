@@ -12,6 +12,7 @@ import styled from "styled-components";
 import Message from "./Message";
 import {useGlobalContext} from "../Context/Context";
 import axios from "axios";
+import Spinner from "../components/Spinner";
 import {io} from "socket.io-client";
 
 let socket;
@@ -20,6 +21,7 @@ function Chat() {
     const [messages,setMessages] = useState([]);
     const [socketCon,setSocketCon] = useState(false);
     const [typing,setTyping] = useState(false);
+    const [loading,setLoading] = useState(false);
 
     const scrollRef = useRef(null);
     const {selectedChat,user,updateSelectedChat,setConversationId,darkMode} = useGlobalContext();
@@ -66,12 +68,14 @@ function Chat() {
         console.log('UseEffect Called to Fetch messages');
         const fetchMessages = async () => {
             try {
+                setLoading(true);
                 console.log('Fetching Messages...',selectedChat.room._id);
                 const res = await axios.post("api/user/messages",{conversationId:selectedChat.room._id});
-   
+                setLoading(false);
                 setMessages(res.data);
             } catch (error) {
                 console.log(error);
+                setLoading(false);
             }
         }
         if(!selectedChat.newChat){
@@ -139,7 +143,8 @@ function Chat() {
             <section className="chat__body__wrapper">
               <div className="chat__box_wrapper">
                 <div className="chat__body__bg">
-                {messages.map(msg => {
+                {loading?<Spinner/>:messages.map(msg => {
+                    console.log(msg);
                     return <div ref={scrollRef}>
                     <Message 
                     key={msg._id} 
