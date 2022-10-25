@@ -25,7 +25,7 @@ function Signup() {
                     password,
                 }
                 setLoading(true);
-                const res = await axios.post("http://localhost:8080/api/auth/signup",body);
+                const res = await axios.post("api/auth/signup",body);
                 setLoading(false);
                 if(res.status===200){
                     history.replace("/login");
