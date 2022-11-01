@@ -24,7 +24,7 @@ function Chat() {
     const [loading,setLoading] = useState(false);
 
     const scrollRef = useRef(null);
-    const {selectedChat,user,updateSelectedChat,setConversationId,darkMode} = useGlobalContext();
+    const {selectedChat,user,updateSelectedChat,setConversationId,darkMode,conversation,setConversation} = useGlobalContext();
     
     useEffect(() => {
         socket = io(axios.defaults.baseURL);
@@ -35,16 +35,14 @@ function Chat() {
         })
 
         socket.on('send-message',data => {
-            console.log(data);
             if(data.senderId===user._id) return;
             setMessages(prevState => [...prevState,data]);
         })
 
-
         return () => {
             socket.close();
         }
-    },[selectedChat.room._id,user._id])
+    },[selectedChat.room._id])
 
     useEffect(() => {
         if(!socketCon) return;
@@ -61,16 +59,14 @@ function Chat() {
     const handleMessageChange = (e) => {
         if(!socketCon) return;
         socket.emit('typing',selectedChat.room._id);
-        setMessage(e.target.value)
+        setMessage(e.target.value);
     }
 
     useEffect(() => {
         setMessages([]);
-        console.log('UseEffect Called to Fetch messages');
         const fetchMessages = async () => {
             try {
                 setLoading(true);
-                console.log('Fetching Messages...',selectedChat.room._id);
                 const res = await axios.post("api/user/messages",{conversationId:selectedChat.room._id});
                 setLoading(false);
                 setMessages(res.data);
@@ -82,7 +78,7 @@ function Chat() {
         if(!selectedChat.newChat){
             fetchMessages();
         }
-    },[selectedChat.room._id]);
+    },[selectedChat.room._id,selectedChat.newChat]);
 
     useEffect(() => {
         scrollRef.current?.scrollIntoView({behavior:"smooth"});
@@ -105,14 +101,29 @@ function Chat() {
                     createdAt:new Date().toISOString(),
                     _id:Math.random().toString(36).substr(2,9)
                 }
+
                 setMessages(prevState => [...prevState,msg]);
                 const res = await axios.post('api/user/postMessage',data);
 
                 if(res.status===200) {
                         if(selectedChat.newChat){
                             updateSelectedChat();
+                            const newCon = {participants:[selectedChat.room],_id:res.data._id};
+                            setConversation(newCon);
                             setConversationId(res.data._id);
                         }
+                        if(conversation[0]?._id!==selectedChat.room._id) {
+                            if(!(conversation.length===0)) {
+                                const conIndex = conversation.findIndex(x => x._id===selectedChat.room._id)
+                                const newConv = [...conversation];
+                                const ele = newConv[conIndex];
+                                if(ele) {
+                                    newConv.splice(conIndex,1);
+                                    newConv.splice(0,0,ele);
+                                    setConversation(newConv);
+                                }
+                            };
+                        } 
                 }
                 setMessage("");
             }
@@ -133,11 +144,8 @@ function Chat() {
                     </IconButton>
                 </div>
                 <div className="room">
-                    <h2 className="title">{selectedChat.room?.group?selectedChat.room.groupName:selectedChat.room.name}</h2>
+                    <h2 className="title">{selectedChat.room.name}</h2>
                     {typing&&<p>Typing...</p>}
-                    {selectedChat.room?.group&&<p className="members">
-                        Rajath, nishan, suhas, jeevan, awais
-                    </p>}
                 </div>
                 <div className="icons">
                     <IconButton>
@@ -152,9 +160,8 @@ function Chat() {
               <div className="chat__box_wrapper">
                 <div className="chat__body__bg">
                 {loading?<Spinner/>:messages.map(msg => {
-                    return <div ref={scrollRef}>
-                    <Message 
-                    key={msg._id} 
+                    return <div ref={scrollRef} key={msg._id}>
+                    <Message  
                     darkMode={darkMode}
                     text={msg.content} 
                     date={msg.createdAt}

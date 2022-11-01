@@ -14,8 +14,7 @@ import axios from "axios";
 
 function Sidebar() {
     const [anchorEl, setAnchorEl] = useState(null);
-    const [conversation,setConversation] = useState([]);
-    const [loading,setLoading] = useState(true);
+    const [loading,setLoading] = useState(false);
 
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -25,7 +24,7 @@ function Sidebar() {
       setAnchorEl(null);
     };
 
-    const {user,openProfileSidebar,openNewChatSidebar,openNewGroupSidebar,logout,openSelectedChat,darkMode} = useGlobalContext();
+    const {user,openProfileSidebar,openNewChatSidebar,logout,openSelectedChat,darkMode,conversation,setConversation} = useGlobalContext();
 
     useEffect(() => {
         const getConversation = async () => {
@@ -79,7 +78,6 @@ function Sidebar() {
                             anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
                         >
                             <MenuItem ><span onClick={openNewChatSidebar}>New Chat</span></MenuItem>
-                            <MenuItem ><span onClick={openNewGroupSidebar}>New Group</span></MenuItem>
                             <MenuItem><span onClick={logout}>Logout</span></MenuItem>
                         </Menu>
                 </div>
@@ -95,18 +93,17 @@ function Sidebar() {
                     />
                 </div>
             </section>
-            </div>
+            </div>                                   
             {/* Chat Room Section */}
             <div className="room__container">
-                {loading?<Spinner/>:conversation.map(chat => (
-                    <Room 
+                {loading?<Spinner/>:conversation.map(chat => {
+                   return <Room 
                     key={chat._id} 
                     darkMode={darkMode}
-                    room={chat.group?{name:chat.groupName,profileUrl:chat?.profileUrl}:chat.participants[0]} 
-                    group={chat.group}
-                    handleChatOpen={() => openSelectedChat(chat.group?{name:chat.groupName,profileUrl:chat?.profileUrl}:{...chat.participants[0],_id:chat._id},false)}
+                    room={chat.participants[0]} 
+                    handleChatOpen={() => openSelectedChat({...chat.participants[0],_id:chat._id},false)}
                     />
-                ))}
+                })}
             </div>
         </Wrapper>
     );

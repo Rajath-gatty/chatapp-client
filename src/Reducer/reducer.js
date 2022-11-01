@@ -4,8 +4,6 @@ OPEN_PROFILE_SIDEBAR,
 CLOSE_PROFILE_SIDEBAR,
 OPEN_NEWCHAT_SIDEBAR,
 CLOSE_NEWCHAT_SIDEBAR,
-OPEN_NEWGROUP_SIDEBAR,
-CLOSE_NEWGROUP_SIDEBAR,
 OPEN_SELECTED_CHAT,
 UPDATE_SELECTED_CHAT,
 CHANGE_PROFILE_URL,
@@ -13,7 +11,8 @@ SET_CONVERSATION_ID,
 OPEN_RIGHT_SIDEBAR,
 CLOSE_RIGHT_SIDEBAR,
 SET_THEME,
-TOGGLE_THEME
+TOGGLE_THEME,
+SET_CONVERSATIONS
 } from "./actions";
 
 const reducer = (state, action) => {
@@ -35,12 +34,6 @@ const reducer = (state, action) => {
     if (action.type === CLOSE_NEWCHAT_SIDEBAR) {
         return { ...state, newChatSidebarOpen: false };
     }
-    if (action.type === OPEN_NEWGROUP_SIDEBAR) {
-        return { ...state, newGroupSidebarOpen: true };
-    }
-    if (action.type === CLOSE_NEWGROUP_SIDEBAR) {
-        return { ...state, newGroupSidebarOpen: false };
-    }
     if (action.type === OPEN_RIGHT_SIDEBAR) {
         return { ...state, rightSidebarOpen: true };
     }
@@ -48,7 +41,7 @@ const reducer = (state, action) => {
         return { ...state, rightSidebarOpen: false };
     }
     if (action.type === OPEN_SELECTED_CHAT) {
-        return { ...state, selectedChat: {room:action.payload.room,newChat:action.payload.newChat,doubleClicked:action.payload.room._id===state.selectedChat.room._id} };
+        return { ...state, selectedChat: {room:action.payload.room,newChat:action.payload.newChat} };
     }
     if (action.type === UPDATE_SELECTED_CHAT) {
         return { ...state, selectedChat:{room:{...state.selectedChat.room},newChat:false} };
@@ -58,6 +51,9 @@ const reducer = (state, action) => {
     }
     if (action.type === SET_CONVERSATION_ID) {
         return { ...state, selectedChat:{room:{...state.selectedChat.room,_id:action.payload},newChat:state.selectedChat.newChat} };
+    }
+    if (action.type === SET_CONVERSATIONS) {
+        return { ...state, conversation:Array.isArray(action.payload)?action.payload:[action.payload,...state.conversation]};
     }
     if (action.type === SET_THEME) {
         return { ...state, darkMode: action.payload };

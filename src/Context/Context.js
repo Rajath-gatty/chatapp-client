@@ -5,8 +5,6 @@ OPEN_PROFILE_SIDEBAR,
 CLOSE_PROFILE_SIDEBAR,
 OPEN_NEWCHAT_SIDEBAR,
 CLOSE_NEWCHAT_SIDEBAR,
-OPEN_NEWGROUP_SIDEBAR,
-CLOSE_NEWGROUP_SIDEBAR,
 OPEN_SELECTED_CHAT,
 UPDATE_SELECTED_CHAT,
 CHANGE_PROFILE_URL,
@@ -14,7 +12,8 @@ SET_CONVERSATION_ID,
 OPEN_RIGHT_SIDEBAR,
 CLOSE_RIGHT_SIDEBAR,
 SET_THEME,
-TOGGLE_THEME 
+TOGGLE_THEME,
+SET_CONVERSATIONS
 } from "../Reducer/actions";
 import reducer from "../Reducer/reducer";
 
@@ -24,10 +23,10 @@ const initialState = {
     isAuth: false,
     profileSidebarOpen: false,
     newChatSidebarOpen: false,
-    newGroupSidebarOpen: false,
     rightSidebarOpen: false,
     selectedChat: {room:{_id:null},newChat:true},
     darkMode: false,
+    conversation:[]
 };
 
 function Context({ children }) {
@@ -56,12 +55,7 @@ function Context({ children }) {
     const closeNewChatSidebar = () => {
         dispatch({ type: CLOSE_NEWCHAT_SIDEBAR });
     }
-    const openNewGroupSidebar = () => {
-        dispatch({ type: OPEN_NEWGROUP_SIDEBAR });
-    }
-    const closeNewGroupSidebar = () => {
-        dispatch({ type: CLOSE_NEWGROUP_SIDEBAR });
-    }
+
     const openSelectedChat = (room,bool) => {
         dispatch({ type: OPEN_SELECTED_CHAT,payload:{room,newChat:bool}});
     }
@@ -88,6 +82,10 @@ function Context({ children }) {
     const toggleThemeMode = () => {
         dispatch({ type: TOGGLE_THEME});
     }
+    
+    const setConversation = (obj) => {
+        dispatch({ type: SET_CONVERSATIONS,payload:obj});
+    }
 
     return (
         <stateContext.Provider
@@ -99,8 +97,6 @@ function Context({ children }) {
                 closeProfileSidebar,
                 openNewChatSidebar,
                 closeNewChatSidebar,
-                openNewGroupSidebar,
-                closeNewGroupSidebar,
                 openSelectedChat,
                 updateSelectedChat,
                 changeProfileUrl,
@@ -109,6 +105,7 @@ function Context({ children }) {
                 closeRightSidebar,
                 setThemeMode,
                 toggleThemeMode,
+                setConversation
             }}
         >
             {children}

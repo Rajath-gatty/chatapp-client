@@ -1,5 +1,4 @@
 import React from "react";
-import Logo from "../images/whatsapp.svg";
 import styled from "styled-components";
 
 function Nav() {

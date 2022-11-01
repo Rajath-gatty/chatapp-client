@@ -6,26 +6,23 @@ import Sidebar from "../components/Sidebar";
 import Login from "../Pages/Login";
 import Profile from "../components/Profile";
 import NewChat from "../components/NewChat";
-import NewGroup from "../components/NewGroup";
 import ChatBanner from "../components/ChatBanner";
 import useDelayUnmount from "../util/DelayUnmount";
 
 function Home() {
-    const { isAuth,profileSidebarOpen,newChatSidebarOpen,newGroupSidebarOpen,selectedChat,darkMode } = useGlobalContext();
+    const { isAuth,profileSidebarOpen,newChatSidebarOpen,selectedChat,darkMode } = useGlobalContext();
     const delayUnmount = useDelayUnmount(newChatSidebarOpen, 100);
-    const delayUnmount2 = useDelayUnmount(newGroupSidebarOpen, 100);
-    const delayUnmount3 = useDelayUnmount(profileSidebarOpen, 100);
+    const delayUnmount2 = useDelayUnmount(profileSidebarOpen, 100);
     return (
         <>
             {isAuth ? (
                 <Wrapper 
-                open={profileSidebarOpen||newChatSidebarOpen||newGroupSidebarOpen}
+                open={profileSidebarOpen||newChatSidebarOpen}
                 darkMode={darkMode}
                 >
                     <div className="overlay__sidebar">
                         {delayUnmount&&<NewChat/>}
-                        {delayUnmount2&&<NewGroup/>}
-                        {delayUnmount3&&<Profile/>}
+                        {delayUnmount2&&<Profile/>}
                     </div>
                     <Sidebar />
                     {!selectedChat.room._id?<ChatBanner/>:<Chat />}

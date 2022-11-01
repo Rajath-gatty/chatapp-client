@@ -1,7 +1,7 @@
 import { AccountCircle } from "@material-ui/icons";
 import styled from "styled-components";
 
-function Room({room,handleChatOpen,group=false,darkMode}) {
+function Room({room,handleChatOpen,darkMode}) {
     return (
         <Wrapper darkMode={darkMode}>
             <div className="room__wrapper" onClick={handleChatOpen}>
@@ -12,7 +12,7 @@ function Room({room,handleChatOpen,group=false,darkMode}) {
                 </div>
                 <div className="room__content">
                     <h2 className="room__title">{room.name}</h2>
-                    {!group&&<p className="latest__messages">{room.username}</p>}
+                    <p className="latest__messages">{room.username}</p>
                 </div>
             </div>
         </Wrapper>

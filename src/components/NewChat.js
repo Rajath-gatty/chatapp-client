@@ -29,7 +29,6 @@ const NewChat = () => {
     },[search]);
 
 
-
     return(
         <MultiSidebar heading="New Chat" onClose={closeNewChatSidebar}>
             <Wrapper darkMode={darkMode}>
@@ -49,7 +48,7 @@ const NewChat = () => {
                         room={user} 
                         handleChatOpen={() => {
                             if(user._id!==selectedChat.room._id) {
-                               return openSelectedChat(user,true);
+                               return openSelectedChat({...user},true);
                             }
                         }}
                         />
