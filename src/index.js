@@ -5,7 +5,7 @@ import "./index.css";
 import App from "./App";
 import axios from "axios";
 
-axios.defaults.baseURL = "https://chatapp-backend-01.herokuapp.com";
+axios.defaults.baseURL = "https://chatapp-backend-kd8k.onrender.com";
 // axios.defaults.baseURL = "http://localhost:8080";
 
 ReactDOM.render(
